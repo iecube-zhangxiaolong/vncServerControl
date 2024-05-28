@@ -20,7 +20,7 @@ def start_vnc(request):
     listen = post_params.get('listen')
     try:
         if os.name == 'posix':
-            command = ['bash', '/iecube/vncServerControl/start_vnc.sh', vnc, listen]
+            command = ['bash', '/iecube/vncServerControl/start_vnc.sh', str(vnc), str(listen)]
             output = subprocess.run(command, capture_output=True, text=True, check=True)
             back_msg['data'] = int(output.stdout.strip())
             back_msg['res'] = 1
@@ -39,9 +39,10 @@ def stop_vnc(request):
     pid = post_params.get('pid')
     try:
         if os.name == 'posix':
-            command = ['bash', '/iecube/vncServerControl/stop_vnc.sh', pid]
+            command = ['bash', '/iecube/vncServerControl/stop_vnc.sh', str(pid)]
             output = subprocess.run(command, capture_output=True, text=True, check=True)
-            back_msg['data'] = int(output.stdout.strip())   # 1 : 成功杀死 0 ：没有该进程
+            res = int(output.stdout.strip())   # 1 : 成功杀死 0 ：没有该进程
+            back_msg['data'] = res
             back_msg['res'] = 1
         return JsonResponse(back_msg)
     except Exception as e:
