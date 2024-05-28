@@ -11,7 +11,14 @@ vnc_port=$1
 listen_port=$2
 # 执行命令并获取进程号
 nohup /iecube/novnc/utils/novnc_proxy --vnc 127.0.0.1:"$vnc_port" --listen 0.0.0.0:"$listen_port" > /iecube/novnc/log/"$vnc_port".log 2>&1 &
+nohup /iecube/vncServerControl/websockify/run 0.0.0.0:"$listen_port" 127.0.0.1:"$vnc_port" > /iecube/vncServerControl/log/48001.log 2>&1 &
 pid=$!
 
-# 输出进程号
-echo "进程号: $pid"
+# 检查 PID 是否存在
+if ps -p $pid > /dev/null; then
+    # 进程存在，返回 PID
+    echo "$pid"
+else
+    # 进程不存在，返回 0
+    echo "0"
+fi
